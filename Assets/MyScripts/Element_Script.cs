@@ -5,30 +5,77 @@ using UnityEngine;
 public class Element_Script : MonoBehaviour
 {
 
-    Vector2 randPos, initPosition;
+    Vector2 initPosition, initScale;
 
-    float MARGE = 0.5f;
+    float MARGE = 50;
 
-    void Start()
+    bool isLoopablePlayed = false;
+    void OnEnable()
     {
-        initPosition = transform.position;
-        randPos = transform.position;
-        randPos.y += Random.Range(-MARGE, MARGE);
-        transform.position = randPos;
+        StopAllCoroutines();
+        isLoopablePlayed = false;
 
-        StartCoroutine(Loopable_Float());
+        if (initScale.x > 0)
+        {
+            transform.localScale = initScale;
+        }
+
+        initPosition = transform.position;
+        Vector2 randRange = initPosition;
+        randRange.y += Random.Range(-MARGE, MARGE);
+
+        initScale = transform.localScale;
+
+        transform.position = randRange;
+
+        StartCoroutine(Spawn_Anim());
+    }
+
+    void Update()
+    {
+        if (isLoopablePlayed)
+        {
+            isLoopablePlayed = false;
+            StartCoroutine(Loopable_Float());
+        }
+    }
+
+    IEnumerator Spawn_Anim()
+    {
+        Vector2 currentScale = initScale;
+
+        transform.localScale = Vector2.zero;
+        currentScale = transform.localScale;
+
+        while (transform.localScale.x < initScale.x)
+        {
+            float randSpeed = Random.Range(5f, 10f);
+            currentScale.x += Time.deltaTime * randSpeed;
+            currentScale.y += Time.deltaTime * randSpeed;
+
+            transform.localScale = currentScale;
+            yield return new WaitForEndOfFrame();
+        }
+
+        transform.localScale = initScale;
+
+       isLoopablePlayed = true;
     }
 
     IEnumerator Loopable_Float()
     {
-        Vector2 targetPos = transform.position;
-        Vector2 currentPos = targetPos;
-        targetPos.y += MARGE;
+        Vector2 targetPos = initPosition;
+        Vector2 currentPos = transform.position;
 
-        while (true) {
+        while (true)
+        {
+
+            targetPos = initPosition;
+            targetPos.y += MARGE;
+
             while (transform.position.y < targetPos.y)
             {
-                currentPos.y += Time.deltaTime * 5f;
+                currentPos.y += Time.deltaTime * 20;
                 transform.position = currentPos;
                 yield return new WaitForEndOfFrame();
             }
@@ -36,11 +83,11 @@ public class Element_Script : MonoBehaviour
             targetPos = initPosition;
             targetPos.y -= MARGE;
 
-            while (transform.position.y < targetPos.y)
+            while (transform.position.y > targetPos.y)
             {
-                currentPos.y -= Time.deltaTime * 5f;
+                currentPos.y -= Time.deltaTime * 20;
                 transform.position = currentPos;
-                yield return  new WaitForEndOfFrame();
+                yield return new WaitForEndOfFrame();
             }
             yield return new WaitForEndOfFrame();
         }
