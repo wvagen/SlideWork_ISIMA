@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MS_SlideShow_Canvas : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class MS_SlideShow_Canvas : MonoBehaviour
     private MS_SlideShow_Page currentPage;
 
     int currentPageIndex = 0;
+
+    static int index = 0;
 
     void Start()
     {
@@ -62,7 +65,30 @@ public class MS_SlideShow_Canvas : MonoBehaviour
             currentPage = pages[currentPageIndex];
             currentPage.Set_Active(true);
         }
-        else if ((currentPageIndex > 0) && (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.LeftArrow)))
+        else if (SceneManager.GetActiveScene().name == "Presentation_1")
+        {
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                index++;
+                SceneManager.LoadScene("Presentation_2_0");
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    index++;
+                    SceneManager.LoadScene("Presentation_2_1");
+                }
+            }
+        }
+        else if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+                index++;
+                SceneManager.LoadScene("Presentation_" + index.ToString());
+        }
+        
+        if ((currentPageIndex > 0) && (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.LeftArrow)))
         {
             currentPage.Set_Active(false);
             currentPageIndex--;

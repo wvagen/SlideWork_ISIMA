@@ -7,7 +7,7 @@ public class Element_Script : MonoBehaviour
 
     Vector2 initPosition, initScale;
 
-    float MARGE = 50;
+    float MARGE = 25;
 
     bool isLoopablePlayed = false;
     void OnEnable()
@@ -75,7 +75,7 @@ public class Element_Script : MonoBehaviour
 
             while (transform.position.y < targetPos.y)
             {
-                currentPos.y += Time.deltaTime * 20;
+                currentPos.y += Time.deltaTime * 10;
                 transform.position = currentPos;
                 yield return new WaitForEndOfFrame();
             }
@@ -85,7 +85,7 @@ public class Element_Script : MonoBehaviour
 
             while (transform.position.y > targetPos.y)
             {
-                currentPos.y -= Time.deltaTime * 20;
+                currentPos.y -= Time.deltaTime * 10;
                 transform.position = currentPos;
                 yield return new WaitForEndOfFrame();
             }
